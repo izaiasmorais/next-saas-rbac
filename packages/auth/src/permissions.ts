@@ -1,8 +1,7 @@
 import { AbilityBuilder } from '@casl/ability'
 import { AppAbility } from '.'
 import { User } from './models/user'
-
-type Role = 'ADMIN' | 'MEMBER'
+import { Role } from './roles'
 
 type PersmissionsByRole = (
   user: User,
@@ -14,6 +13,8 @@ export const permissions: Record<Role, PersmissionsByRole> = {
     can('manage', 'all')
   },
   MEMBER(_, { can }) {
-    can('invite', 'User')
+    // can('invite', 'User')
+    can('manage', 'Project')
   },
+  BILLING() {},
 }
