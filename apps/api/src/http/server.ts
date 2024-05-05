@@ -6,6 +6,7 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { createAccount } from './routes/auth/create-account'
+import { main } from './routes/base'
 
 const port = process.env.PORT || '3333'
 
@@ -18,6 +19,8 @@ app.register(fastifyCors)
 
 app.register(createAccount)
 
+app.register(main)
+
 app.listen({ port: Number(port) }).then(() => {
-  console.log('HTTP server running')
+  console.log(`HTTP server running at ${port}`)
 })
