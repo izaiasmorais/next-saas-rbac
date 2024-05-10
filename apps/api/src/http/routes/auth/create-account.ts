@@ -21,17 +21,26 @@ export async function createAccount(app: FastifyInstance) {
     async (request, reply) => {
       const { name, email, password } = request.body
 
-      const emailAlreadyRegistered = await prisma.user.findUnique({
+      const isEmailAlreadyRegistered = await prisma.user.findUnique({
         where: {
           email,
         },
       })
 
-      if (emailAlreadyRegistered) {
+      if (isEmailAlreadyRegistered) {
         return reply.status(400).send({
           message: 'The email is already registered',
         })
       }
+
+      const [, domain] = email.split('@')
+
+      const autoJoinOrganization = await prisma.organization.findFirst({
+        where: {
+          domain,
+          shouldAttachUsersByDomain: true,
+        },
+      })
 
       const passwordHash = await hash(password, 6)
 
@@ -40,6 +49,13 @@ export async function createAccount(app: FastifyInstance) {
           name,
           email,
           passwordHash,
+          member_on: autoJoinOrganization
+            ? {
+                create: {
+                  organizationId: autoJoinOrganization.id,
+                },
+              }
+            : undefined,
         },
       })
 
