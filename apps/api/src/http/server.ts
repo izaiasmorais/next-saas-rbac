@@ -12,14 +12,15 @@ import {
 import { createAccount } from './routes/auth/create-account'
 import { main } from './routes/base'
 import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
+import { getProfile } from './routes/auth/get-profile'
 
 const port = process.env.PORT || '3333'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
-app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
-
+app.setSerializerCompiler(serializerCompiler)
+app.register(fastifyCors)
 app.register(fastifySwagger, {
   openapi: {
     info: {
@@ -31,21 +32,16 @@ app.register(fastifySwagger, {
   },
   transform: jsonSchemaTransform,
 })
-
 app.register(fastifySwaggerUI, {
   routePrefix: '/docs',
 })
-
-app.register(fastifyCors)
-
 app.register(fastifyJwt, {
   secret: 'my-jwt-secret',
 })
 
 app.register(createAccount)
-
 app.register(authenticateWithPassword)
-
+app.register(getProfile)
 app.register(main)
 
 app.listen({ port: Number(port) }).then(() => {
