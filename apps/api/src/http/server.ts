@@ -1,6 +1,7 @@
 import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
+import fastifyJwt from '@fastify/jwt'
 import fastifySwaggerUI from '@fastify/swagger-ui'
 import {
   jsonSchemaTransform,
@@ -10,6 +11,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { createAccount } from './routes/auth/create-account'
 import { main } from './routes/base'
+import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
 
 const port = process.env.PORT || '3333'
 
@@ -36,7 +38,13 @@ app.register(fastifySwaggerUI, {
 
 app.register(fastifyCors)
 
+app.register(fastifyJwt, {
+  secret: 'my-jwt-secret',
+})
+
 app.register(createAccount)
+
+app.register(authenticateWithPassword)
 
 app.register(main)
 
