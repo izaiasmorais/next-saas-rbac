@@ -10,9 +10,9 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { createAccount } from './routes/auth/create-account'
-import { main } from './routes/base'
 import { authenticateWithPassword } from './routes/auth/authenticate-with-password'
 import { getProfile } from './routes/auth/get-profile'
+import { errorHandler } from './error-handler'
 
 const port = process.env.PORT || '3333'
 
@@ -20,6 +20,7 @@ const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
+app.setErrorHandler(errorHandler)
 app.register(fastifyCors)
 app.register(fastifySwagger, {
   openapi: {
@@ -42,7 +43,6 @@ app.register(fastifyJwt, {
 app.register(createAccount)
 app.register(authenticateWithPassword)
 app.register(getProfile)
-app.register(main)
 
 app.listen({ port: Number(port) }).then(() => {
   console.log(`HTTP server running at ${port}`)

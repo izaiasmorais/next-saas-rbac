@@ -3,6 +3,7 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { hash } from 'bcryptjs'
+import { BadRequestError } from '../_erros/bad-request-error'
 
 export async function createAccount(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -28,9 +29,7 @@ export async function createAccount(app: FastifyInstance) {
       })
 
       if (isEmailAlreadyRegistered) {
-        return reply.status(400).send({
-          message: 'The email is already registered',
-        })
+        throw new BadRequestError('The email is already registered')
       }
 
       const [, domain] = email.split('@')
