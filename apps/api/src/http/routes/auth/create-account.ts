@@ -22,13 +22,13 @@ export async function createAccount(app: FastifyInstance) {
     async (request, reply) => {
       const { name, email, password } = request.body
 
-      const isEmailAlreadyRegistered = await prisma.user.findUnique({
+      const userFromEmail = await prisma.user.findUnique({
         where: {
           email,
         },
       })
 
-      if (isEmailAlreadyRegistered) {
+      if (userFromEmail) {
         throw new BadRequestError('The email is already registered')
       }
 
