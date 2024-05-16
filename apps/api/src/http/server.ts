@@ -15,6 +15,7 @@ import { getProfile } from './routes/auth/get-profile'
 import { errorHandler } from './error-handler'
 import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
+import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
 
 const port = process.env.PORT || '3333'
 
@@ -47,6 +48,7 @@ app.register(createAccount)
 app.register(authenticateWithPassword)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
+app.register(authenticateWithGithub)
 
 app.listen({ port: Number(port) }).then(() => {
   console.log(`HTTP server running at ${port}`)
