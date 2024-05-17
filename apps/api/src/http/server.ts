@@ -16,6 +16,7 @@ import { errorHandler } from './error-handler'
 import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
 import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
+import { env } from '@saas/env'
 
 const port = process.env.PORT || '3333'
 
@@ -32,7 +33,15 @@ app.register(fastifySwagger, {
       description: 'Full-stack Saas app with multi-tenant & RBAC',
       version: '1.0.0',
     },
-    servers: [],
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: 'http',
+					scheme: 'bearer',
+					bearerFormat: 'JWT',
+				}
+			}
+		}
   },
   transform: jsonSchemaTransform,
 })
@@ -40,7 +49,7 @@ app.register(fastifySwaggerUI, {
   routePrefix: '/docs',
 })
 app.register(fastifyJwt, {
-  secret: 'my-jwt-secret',
+  secret: env.JWT_SECRET,
 })
 
 app.register(getProfile)
@@ -50,6 +59,6 @@ app.register(requestPasswordRecover)
 app.register(resetPassword)
 app.register(authenticateWithGithub)
 
-app.listen({ port: Number(port) }).then(() => {
+app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`HTTP server running at ${port}`)
 })
