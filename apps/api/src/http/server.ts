@@ -17,6 +17,7 @@ import { requestPasswordRecover } from './routes/auth/request-password-recover'
 import { resetPassword } from './routes/auth/reset-password'
 import { authenticateWithGithub } from './routes/auth/authenticate-with-github'
 import { env } from '@saas/env'
+import { createOrganization } from './routes/orgs/create-organization'
 
 const port = process.env.PORT || '3333'
 
@@ -52,12 +53,16 @@ app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 })
 
+// auth
 app.register(getProfile)
 app.register(createAccount)
+app.register(authenticateWithGithub)
 app.register(authenticateWithPassword)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
-app.register(authenticateWithGithub)
+
+// organization
+app.register(createOrganization)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`HTTP server running at ${port}`)
