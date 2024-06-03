@@ -21,6 +21,7 @@ import { createOrganization } from './routes/orgs/create-organization'
 import { getMembership } from './routes/orgs/get-membership'
 import { getOrganization } from './routes/orgs/get-organization'
 import { getOrganizations } from './routes/orgs/get-organizations'
+import { removeOrganization } from './routes/orgs/remove-organization'
 
 const port = process.env.PORT || '3333'
 
@@ -69,6 +70,7 @@ app.register(createOrganization)
 app.register(getMembership)
 app.register(getOrganization)
 app.register(getOrganizations)
+app.register(removeOrganization)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`HTTP server running at ${port}`)

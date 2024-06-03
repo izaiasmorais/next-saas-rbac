@@ -46,7 +46,9 @@ export function defineAbilityFor(user: User) {
     detectSubjectType: (subject) => {
       return subject.__typename
     },
-  })
+	})
+
+	ability.can = ability.can.bind(ability)
 
   return ability
 }
